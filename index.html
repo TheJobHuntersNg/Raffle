@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Job Hunters Grant</title>
+<title>Job Hunter Raffle Draw</title>
 
 <!-- Favicon -->
 <link rel="icon" type="image/png" href="img/logo.png">
@@ -340,36 +340,39 @@ input[type="radio"] {
     <div class="container">
         <div class="logo-section">
             <img src="img/logo.png" alt="The Job Hunters Logo">
-            <h2>The Job Hunters Grant</h2>
+            <h2>Job Hunter Raffle Draw</h2>
             <p style="font-size: 14px; color: rgba(255, 255, 255, 0.8); margin-top: 10px;">Eligibility & Selection Process</p>
         </div>
 
         <div class="timer" id="timer"></div>
 
         <div class="grant-info" style="background: rgba(0, 117, 255, 0.08); padding: 15px; border-radius: 10px; margin-bottom: 20px; border-left: 3px solid #0075FF; text-align: center; font-size: 14px;">
-            <p><strong>🎁 10 Startups Selected</strong></p>
-            <p style="margin-top: 8px; font-size: 13px;">Each will receive <strong>₦500,000</strong> to grow their business</p>
+            <p><strong>🎁 5 Lucky Persons Will Receive</strong></p>
+            <p style="margin-top: 8px; font-size: 13px;">A total of <strong>₦500,000</strong> picked from a raffle draw</p>
+            <button class="link-btn" onclick="window.location='instructions.html'" style="margin-top: 12px;">How to Complete This Form</button>
         </div>
 
         <input type="text" id="name" placeholder="Full Name" autocomplete="name" required>
         <input type="text" id="location" placeholder="Location" autocomplete="address-level1" required>
 
-        <button class="video-btn" onclick="watchVideo()">▶ Watch Video</button>
+        <div style="margin: 0 0 18px 0; padding: 14px; background: rgba(0, 117, 255, 0.08); border-left: 3px solid #0075FF; border-radius: 10px; font-size: 14px; line-height: 1.6;">
+            <strong>How to get the right answer:</strong><br>
+            Watch <strong>Video 1</strong> for Question 1 and <strong>Video 2</strong> for Question 2. The statement is made within the video, so complete the statement exactly as mentioned there.
+        </div>
 
         <div class="question-section">
-            <p><strong>🎯 Question:</strong><br>
-            Which platform was mentioned as a bonus?</p>
+            <p><strong>Question 1. Complete this statement:</strong><br>
+            Because this is where most people fail, not in skill but in ____________</p>
+            <button class="video-btn" onclick="watchVideo('https://youtu.be/OmxpGNrsKS4?si=A20DPWR85tGxk8xC')" style="margin: 10px 0 0 0;">▶ Watch Video Q 1 Here</button>
+            <input type="text" id="answer1" placeholder="Type your answer here" autocomplete="off" required>
+        </div>
 
-            <div class="radio-group">
-                <label><input type="radio" name="answer" value="outlier ai"> OUTLIER AI</label>
-                <label><input type="radio" name="answer" value="scale ai"> SCALE AI</label>
-                <label><input type="radio" name="answer" value="micro1"> MICRO1</label>
-                <label><input type="radio" name="answer" value="dataforce"> DATAFORCE</label>
-                <label><input type="radio" name="answer" value="appen"> APPEN</label>
-                <label><input type="radio" name="answer" value="oneforma"> ONEFORMA</label>
-                <label><input type="radio" name="answer" value="prolific"> PROLIFIC</label>
-                <label><input type="radio" name="answer" value="consumer opportunity"> CONSUMER OPPORTUNITY</label>
-            </div>
+        <div class="question-section">
+            <p><strong>Question 2. Complete this statement:</strong><br>
+            Remember... Google is investing in people<br>
+            Not just ____________</p>
+            <button class="video-btn" onclick="watchVideo('https://youtu.be/_ec94f9L3Ik?si=Gnw_e033iHP89pxd')" style="margin: 10px 0 0 0;">▶ Watch Video Q 2 Here</button>
+            <input type="text" id="answer2" placeholder="Type your answer here" autocomplete="off" required>
         </div>
 
         <button class="submit-btn" onclick="submitForm()">✓ Submit Application</button>
@@ -379,7 +382,7 @@ input[type="radio"] {
 </div>
 
 <script>
-const correctAnswer = "consumer opportunity"; // CHANGE IF NEEDED
+const correctAnswers = ["Action", "products"];
 const scriptURL = "YOUR_SCRIPT_URL_HERE";
 // Submissions are unlimited; no localStorage tracking.
 
@@ -403,43 +406,51 @@ let timer = setInterval(function() {
     }
 }, 1000);
 
-function watchVideo() {
-    window.open("https://youtu.be/OmxpGNrsKS4?si=SnKH8tdR0Iuu5Hw1", "_blank");
+function watchVideo(videoUrl) {
+    window.open(videoUrl, "_blank");
 }
 
-function getAnswer() {
-    let options = document.getElementsByName("answer");
-    for (let i = 0; i < options.length; i++) {
-        if (options[i].checked) return options[i].value.toLowerCase();
-    }
-    return null;
+function getAnswer(id) {
+    let answer = document.getElementById(id);
+    return answer ? answer.value.trim() : null;
 }
 
-function generateCode() {
-    return "JH-" + Math.random().toString(36).substring(2,8).toUpperCase();
+function generateCode(name) {
+    let firstName = name.split(/\s+/)[0] || "Applicant";
+    let safeName = firstName.replace(/[^a-zA-Z]/g, '').slice(0, 12) || "Applicant";
+    let nextNumber = Math.floor(1000 + Math.random() * 9000);
+    return safeName + nextNumber;
 }
 
 function submitForm() {
     let name = document.getElementById("name").value.trim();
     let location = document.getElementById("location").value.trim();
-    let answer = getAnswer();
+    let answer1 = getAnswer("answer1");
+    let answer2 = getAnswer("answer2");
     let result = document.getElementById("result");
 
-    if (!name || !location || !answer) {
+    if (!name || !location || !answer1 || !answer2) {
         result.classList.add("error");
         result.classList.remove("success");
-        result.innerHTML = "⚠️ Please fill all fields and select an answer";
+        result.innerHTML = "⚠️ Please fill all fields and enter both answers";
         return;
     }
 
-    if (answer !== correctAnswer) {
+    // Compare answers case-insensitively so capitalization of the
+    // first letter (or the whole answer) doesn't matter.
+    const a1 = answer1.trim().toLowerCase();
+    const a2 = answer2.trim().toLowerCase();
+    const c1 = correctAnswers[0].toLowerCase();
+    const c2 = correctAnswers[1].toLowerCase();
+
+    if (a1 !== c1 || a2 !== c2) {
         result.classList.add("error");
         result.classList.remove("success");
-        result.innerHTML = "❌ Incorrect answer. Please try again.<br><button class='link-btn' onclick=\"window.location='instructions.html'\">Click here to find the right answer</button>";
+        result.innerHTML = "❌ Incorrect answer. Please try again (Make sure to add {s} to your answers on question 2.)<br><button class='link-btn' onclick=\"window.location='instructions.html'\">Click here to find the right answer</button>";
         return;
     }
 
-    let code = generateCode();
+    let code = generateCode(name);
 
     // Save to Google Sheets
     fetch(scriptURL, {
@@ -455,7 +466,7 @@ function submitForm() {
 
     result.classList.add("success");
     result.classList.remove("error");
-    result.innerHTML = "✓ Success! Your Application Code:<div class='code-display'>" + code + "</div><p style='margin-top: 10px; font-size: 13px; opacity: 0.8;'>Use this code to begin your Pitch Deck in the comment section of the video as directed. To help your comment appear on YouTube, include your code in this format: <strong>My Application Code is " + code + "</strong></p>";
+    result.innerHTML = "✓ Success Your Unique Application Code is:<div class='code-display'>" + code + "</div><p style='margin-top: 10px; font-size: 13px; opacity: 0.8;'>Copy your code first, then read the instructions below to register properly.</p><button class='link-btn' onclick=\"window.location='instructions.html'\">Read the Instructions</button>";
 }
 </script>
 
