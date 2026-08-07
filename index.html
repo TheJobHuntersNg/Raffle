@@ -357,22 +357,32 @@ input[type="radio"] {
 
         <div style="margin: 0 0 18px 0; padding: 14px; background: rgba(0, 117, 255, 0.08); border-left: 3px solid #0075FF; border-radius: 10px; font-size: 14px; line-height: 1.6;">
             <strong>How to get the right answer:</strong><br>
-            Watch <strong>Video 1</strong> for Question 1 and <strong>Video 2</strong> for Question 2. The statement is made within the video, so complete the statement exactly as mentioned there.
+            Watch <strong>Video 1</strong> for Question 1 and <strong>Video 2</strong> for Question 2. The statement is made within the video, Pick the correct option not mentioned on the video.
         </div>
 
         <div class="question-section">
-            <p><strong>Question 1. Complete this statement:</strong><br>
-            Because this is where most people fail, not in skill but in ____________</p>
+            <p><strong>Question 1.</strong><br>
+            Which of this is not among the companies mentioned in the video 1</p>
             <button class="video-btn" onclick="watchVideo('https://youtu.be/OmxpGNrsKS4?si=A20DPWR85tGxk8xC')" style="margin: 10px 0 0 0;">▶ Watch Video Q 1 Here</button>
-            <input type="text" id="answer1" placeholder="Type your answer here" autocomplete="off" required>
+            <div class="radio-group" style="margin-top: 15px;">
+                <label><input type="radio" name="q1" value="capgemini">A. Capgemini</label>
+                <label><input type="radio" name="q1" value="google ai">B. Google AI</label>
+                <label><input type="radio" name="q1" value="microsoft leap">C. Microsoft Leap</label>
+                <label><input type="radio" name="q1" value="boeing">D. Boeing</label>
+            </div>
         </div>
 
         <div class="question-section">
-            <p><strong>Question 2. Complete this statement:</strong><br>
-            Remember... Google is investing in people<br>
-            Not just ____________</p>
+            <p><strong>Question 2.</strong><br>
+            If Google gave you unlimited AI resources today<br>
+            What problem would you solve?</p>
             <button class="video-btn" onclick="watchVideo('https://youtu.be/_ec94f9L3Ik?si=Gnw_e033iHP89pxd')" style="margin: 10px 0 0 0;">▶ Watch Video Q 2 Here</button>
-            <input type="text" id="answer2" placeholder="Type your answer here" autocomplete="off" required>
+            <div class="radio-group" style="margin-top: 15px;">
+                <label><input type="radio" name="q2" value="website">A. Website?</label>
+                <label><input type="radio" name="q2" value="healthcare">B. Healthcare?</label>
+                <label><input type="radio" name="q2" value="education">C. Education?</label>
+                <label><input type="radio" name="q2" value="transportation">D. Transportation?</label>
+            </div>
         </div>
 
         <button class="submit-btn" onclick="submitForm()">✓ Submit Application</button>
@@ -382,7 +392,7 @@ input[type="radio"] {
 </div>
 
 <script>
-const correctAnswers = ["Action", "products"];
+const correctAnswers = ["google ai", "website"];
 const scriptURL = "YOUR_SCRIPT_URL_HERE";
 // Submissions are unlimited; no localStorage tracking.
 
@@ -425,28 +435,28 @@ function generateCode(name) {
 function submitForm() {
     let name = document.getElementById("name").value.trim();
     let location = document.getElementById("location").value.trim();
-    let answer1 = getAnswer("answer1");
-    let answer2 = getAnswer("answer2");
     let result = document.getElementById("result");
 
-    if (!name || !location || !answer1 || !answer2) {
+    let selectedQ1 = document.querySelector('input[name="q1"]:checked');
+    let selectedQ2 = document.querySelector('input[name="q2"]:checked');
+
+    if (!name || !location || !selectedQ1 || !selectedQ2) {
         result.classList.add("error");
         result.classList.remove("success");
-        result.innerHTML = "⚠️ Please fill all fields and enter both answers";
+        result.innerHTML = "⚠️ Please fill all fields and select an answer for both questions";
         return;
     }
 
-    // Compare answers case-insensitively so capitalization of the
-    // first letter (or the whole answer) doesn't matter.
-    const a1 = answer1.trim().toLowerCase();
-    const a2 = answer2.trim().toLowerCase();
-    const c1 = correctAnswers[0].toLowerCase();
-    const c2 = correctAnswers[1].toLowerCase();
+    const normalize = (value) => value.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const a1 = normalize(selectedQ1.value);
+    const a2 = normalize(selectedQ2.value);
+    const c1 = normalize(correctAnswers[0]);
+    const c2 = normalize(correctAnswers[1]);
 
     if (a1 !== c1 || a2 !== c2) {
         result.classList.add("error");
         result.classList.remove("success");
-        result.innerHTML = "❌ Incorrect answer. Please try again (Make sure to add {s} to your answers on question 2.)<br><button class='link-btn' onclick=\"window.location='instructions.html'\">Click here to find the right answer</button>";
+        result.innerHTML = "❌ Incorrect answer. Please review the video and try again.<br><button class='link-btn' onclick=\"window.location='instructions.html'\">Click here to find the right answer</button>";
         return;
     }
 
