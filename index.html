@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Job Hunter Raffle Draw</title>
+<title>The Job Hunters Grant</title>
 
 <!-- Favicon -->
 <link rel="icon" type="image/png" href="img/logo.png">
@@ -340,48 +340,33 @@ input[type="radio"] {
     <div class="container">
         <div class="logo-section">
             <img src="img/logo.png" alt="The Job Hunters Logo">
-            <h2>Job Hunter Raffle Draw</h2>
+            <h2>The Job Hunters Grant</h2>
             <p style="font-size: 14px; color: rgba(255, 255, 255, 0.8); margin-top: 10px;">Eligibility & Selection Process</p>
         </div>
 
         <div class="timer" id="timer"></div>
 
         <div class="grant-info" style="background: rgba(0, 117, 255, 0.08); padding: 15px; border-radius: 10px; margin-bottom: 20px; border-left: 3px solid #0075FF; text-align: center; font-size: 14px;">
-            <p><strong>🎁 5 Lucky Persons Will Receive</strong></p>
-            <p style="margin-top: 8px; font-size: 13px;">A total of <strong>₦500,000</strong> picked from a raffle draw</p>
-            <button class="link-btn" onclick="window.location='instructions.html'" style="margin-top: 12px;">How to Complete This Form</button>
+            <p><strong>🎁 The ₦500,000 Raffle </strong></p>
+            <p style="margin-top: 8px; font-size: 13px;">Follow the instructions to enter the <strong>₦500,000</strong> raffle </p>
         </div>
 
         <input type="text" id="name" placeholder="Full Name" autocomplete="name" required>
         <input type="text" id="location" placeholder="Location" autocomplete="address-level1" required>
 
-        <div style="margin: 0 0 18px 0; padding: 14px; background: rgba(0, 117, 255, 0.08); border-left: 3px solid #0075FF; border-radius: 10px; font-size: 14px; line-height: 1.6;">
-            <strong>How to get the right answer:</strong><br>
-            Watch <strong>Video 1</strong> for Question 1 and <strong>Video 2</strong> for Question 2. The statement is made within the video, Pick the correct option not mentioned on the video.
-        </div>
+        <button class="video-btn" onclick="watchVideo()">▶ Watch Video</button>
 
         <div class="question-section">
-            <p><strong>Question 1.</strong><br>
-            Which of this is not among the companies mentioned in the video 1</p>
-            <button class="video-btn" onclick="watchVideo('https://youtu.be/OmxpGNrsKS4?si=A20DPWR85tGxk8xC')" style="margin: 10px 0 0 0;">▶ Watch Video Q 1 Here</button>
-            <div class="radio-group" style="margin-top: 15px;">
-                <label><input type="radio" name="q1" value="capgemini">A. Capgemini</label>
-                <label><input type="radio" name="q1" value="google ai">B. Google AI</label>
-                <label><input type="radio" name="q1" value="microsoft leap">C. Microsoft Leap</label>
-                <label><input type="radio" name="q1" value="boeing">D. Boeing</label>
-            </div>
-        </div>
+            <p><strong>🎯 Question:</strong><br>
+            Which platform was mentioned as a bonus?</p>
 
-        <div class="question-section">
-            <p><strong>Question 2.</strong><br>
-            If Google gave you unlimited AI resources today<br>
-            What problem would you solve?</p>
-            <button class="video-btn" onclick="watchVideo('https://youtu.be/_ec94f9L3Ik?si=Gnw_e033iHP89pxd')" style="margin: 10px 0 0 0;">▶ Watch Video Q 2 Here</button>
-            <div class="radio-group" style="margin-top: 15px;">
-                <label><input type="radio" name="q2" value="website">A. Website?</label>
-                <label><input type="radio" name="q2" value="healthcare">B. Healthcare?</label>
-                <label><input type="radio" name="q2" value="education">C. Education?</label>
-                <label><input type="radio" name="q2" value="transportation">D. Transportation?</label>
+            <div class="radio-group">
+                <label><input type="radio" name="answer" value="outlier ai"> JOBBERMAN</label>
+                <label><input type="radio" name="answer" value="scale ai"> iDICE</label>
+                <label><input type="radio" name="answer" value="consumer opportunity"> CONSUMER OPPORTUNITY</label>
+                <label><input type="radio" name="answer" value="micro1"> THE GATE PROJECT</label>
+                <label><input type="radio" name="answer" value="dataforce"> ALX AFRICAE</label>
+                               
             </div>
         </div>
 
@@ -392,7 +377,7 @@ input[type="radio"] {
 </div>
 
 <script>
-const correctAnswers = ["google ai", "website"];
+const correctAnswer = "consumer opportunity"; // CHANGE IF NEEDED
 const scriptURL = "YOUR_SCRIPT_URL_HERE";
 // Submissions are unlimited; no localStorage tracking.
 
@@ -416,47 +401,43 @@ let timer = setInterval(function() {
     }
 }, 1000);
 
-function watchVideo(videoUrl) {
-    window.open(videoUrl, "_blank");
+function watchVideo() {
+    window.open("https://youtu.be/aGx3kLME1HY", "_blank");
 }
 
-function getAnswer(id) {
-    let answer = document.getElementById(id);
-    return answer ? answer.value.trim() : null;
+function getAnswer() {
+    let options = document.getElementsByName("answer");
+    for (let i = 0; i < options.length; i++) {
+        if (options[i].checked) return options[i].value.toLowerCase();
+    }
+    return null;
 }
 
 function generateCode(name) {
-    let firstName = name.split(/\s+/)[0] || "Applicant";
-    let safeName = firstName.replace(/[^a-zA-Z]/g, '').slice(0, 12) || "Applicant";
-    let nextNumber = Math.floor(1000 + Math.random() * 9000);
-    return safeName + nextNumber;
+    let firstName = name.split(/\s+/)[0].replace(/[^a-zA-Z]/g, "").toUpperCase();
+    let randomNumber = new Uint32Array(1);
+    crypto.getRandomValues(randomNumber);
+    let uniqueNumber = String(randomNumber[0] % 1000).padStart(3, "0");
+    return firstName + uniqueNumber;
 }
 
 function submitForm() {
     let name = document.getElementById("name").value.trim();
     let location = document.getElementById("location").value.trim();
+    let answer = getAnswer();
     let result = document.getElementById("result");
 
-    let selectedQ1 = document.querySelector('input[name="q1"]:checked');
-    let selectedQ2 = document.querySelector('input[name="q2"]:checked');
-
-    if (!name || !location || !selectedQ1 || !selectedQ2) {
+    if (!name || !location || !answer) {
         result.classList.add("error");
         result.classList.remove("success");
-        result.innerHTML = "⚠️ Please fill all fields and select an answer for both questions";
+        result.innerHTML = "⚠️ Please fill all fields and select an answer";
         return;
     }
 
-    const normalize = (value) => value.toLowerCase().replace(/[^a-z0-9]/g, '');
-    const a1 = normalize(selectedQ1.value);
-    const a2 = normalize(selectedQ2.value);
-    const c1 = normalize(correctAnswers[0]);
-    const c2 = normalize(correctAnswers[1]);
-
-    if (a1 !== c1 || a2 !== c2) {
+    if (answer !== correctAnswer) {
         result.classList.add("error");
         result.classList.remove("success");
-        result.innerHTML = "❌ Incorrect answer. Please review the video and try again.<br><button class='link-btn' onclick=\"window.location='instructions.html'\">Click here to find the right answer</button>";
+        result.innerHTML = "❌ Incorrect answer. Please try again.<br><button class='link-btn' onclick=\"window.location='instructions.html'\">Click here to find the right answer</button>";
         return;
     }
 
@@ -476,7 +457,7 @@ function submitForm() {
 
     result.classList.add("success");
     result.classList.remove("error");
-    result.innerHTML = "✓ Success Your Unique Application Code is:<div class='code-display'>" + code + "</div><p style='margin-top: 10px; font-size: 13px; opacity: 0.8;'>Copy your code first, then read the instructions below to register properly.</p><button class='link-btn' onclick=\"window.location='instructions.html'\">Read the Instructions</button>";
+    result.innerHTML = "✓ Success, Your Application Code:<div class='code-display'>" + code + "</div><p style='margin-top: 10px; font-size: 13px; opacity: 0.8;'>Go back to the video and use this code in the comment section: <strong>Type in your best part of the video and add this code at the end of your comment " + code + "</strong></p>";
 }
 </script>
 
